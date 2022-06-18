@@ -14,7 +14,7 @@ variables:
   functionAppName: 'UsersServiceChat'
 
   # Agent VM image name
-  vmImageName: 'windows-2019'
+  vmImageName: 'windows-2022'
 
 stages:
 - stage: Build
