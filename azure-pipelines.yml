@@ -16,9 +16,6 @@ variables:
   # Agent VM image name
   vmImageName: 'windows-2019'
 
-  # Working Directory
-  workingDirectory: '.'
-
 stages:
 - stage: Build
   displayName: Build stage
@@ -35,7 +32,7 @@ stages:
       inputs:
         command: 'build'
         projects: |
-          $(workingDirectory)/*.csproj
+          **/*.csproj
         arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
 
     - task: ArchiveFiles@2
