@@ -11,6 +11,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.WindowsAzure.Storage.Table;
 using Microsoft.WindowsAzure.Storage;
 using UsersService.Models;
+using UsersService;
 
 namespace Users.Register
 {
@@ -30,6 +31,8 @@ namespace Users.Register
             {
                 throw new Exception("test exception");
             }
+
+            newUser.Password = HashHelper.HashPassword(newUser.Password);
             User user = new User(newUser);
             if (user == null)
             {

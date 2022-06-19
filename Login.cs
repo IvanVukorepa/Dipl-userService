@@ -45,14 +45,20 @@ namespace Company.Function
             CloudTable table = tableClient.GetTableReference("UsersTable");
 
             string filterUsername = TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, user.username);
-            string filterPassword = TableQuery.GenerateFilterCondition("Password", QueryComparisons.Equal, user.Password);
-            string filter = TableQuery.CombineFilters(filterUsername, TableOperators.And, filterPassword);
+            //string filterPassword = TableQuery.GenerateFilterCondition("Password", QueryComparisons.Equal, user.Password);
+            //string filter = TableQuery.CombineFilters(filterUsername, TableOperators.And, filterPassword);
 
-            var query = new TableQuery<User>().Where(filter);
+            var query = new TableQuery<User>().Where(filterUsername);
 
             var res = await table.ExecuteQuerySegmentedAsync(query, null);
-            if (res.Results.Count == 0)
-                throw new Exception("User with credentials provided not found");
+            if (res.Results.Count != 1)
+                throw new Exception("User with not found");
+
+            if (!HashHelper.ValidatePassword(user.Password, res.Results.ToArray()[0].Password)) 
+            {
+                throw new Exception("User failed to authenticate");
+            }
+
             string token = Auth_JWT.generateJWT(user);
 
             return new OkObjectResult(token);
